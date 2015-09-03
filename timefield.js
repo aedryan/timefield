@@ -96,12 +96,12 @@
 		var OGminute	= $(".tc-minutes").clone().val();
 		var OGhour		= $(".tc-hours").clone().val();
 		var OGsecond	= $(".tc-seconds").clone().val();
-		
-		// This checks to see if the seconds are between 0 and 60, if not it discards it for the last valid value entered, if so it saves the value for the next time an invalid value is entered
-		$(".tc-seconds").on("keyup",function(){
+
+		// Function to check valid values
+		function checkFields(expectedValue,OGValue){
 			var value = $(this).val();
 			if ( 
-				value > 60
+				value > expectedValue
 			) {
 				$(this).effect( "highlight", { 
 					color: "rgba(255,180,180)", 
@@ -110,52 +110,17 @@
 					}
 				}, 500 );
 				$(".tc-container").effect( "shake", {distance: 3, times: 2}, 250 );
-				$(this).val(OGsecond);
+				$(this).val(OGValue);
 			} 
 			else {
-				OGsecond = $(this).val();
+				OGValue = $(this).val();
 			}
-		});
+		}
 		
-		// This checks to see if the minutes are between 0 and 60, if not it discards it for the last valid value entered, if so it saves the value for the next time an invalid value is entered
-		$(".tc-minutes").on("keyup",function(){
-			var value = $(this).val();
-			if ( 
-				value > 60
-			) {
-				$(this).effect( "highlight", { 
-					color: "rgba(255,180,180)", 
-					complete: function(){
-						$(this).select();
-					}
-				}, 500 );
-				$(".tc-container").effect( "shake", {distance: 3, times: 2}, 250 );
-				$(this).val(OGminute);
-			} 
-			else {
-				OGminute = $(this).val();
-			}
-		});
-		
-		// This checks to see if the hours are between 0 and 12, if not it discards it for the last valid value entered, if so it saves the value for the next time an invalid value is entered
-		$(".tc-hours").on("keyup",function(){
-			var value = $(this).val();
-			if ( 
-				value > 12
-			) {
-				$(this).effect( "highlight", { 
-					color: "rgba(255,180,180)", 
-					complete: function(){
-						$(this).select();
-					}
-				}, 500 );
-				$(".tc-container").effect( "shake", {distance: 3, times: 2}, 250 );
-				$(this).val(OGhour);
-			} 
-			else {
-				OGhour = $(this).val();
-			}
-		});
+		// This checks to see if the seconds, minutes, and hours are in the right range, if not it discards it for the last valid value entered, if so it saves the value for the next time an invalid value is entered
+		$(".tc-seconds").on("keyup",checkFields(60,OGsecond));
+		$(".tc-minutes").on("keyup",checkFields(60,OGminute));
+		$(".tc-hours").on("keyup",checkFields(12,OGhour));
 		
 		// This adds leading zeroes to the hours and minutes when the user types a single digit
 		$(".tc-numbers").on("blur",function(){
