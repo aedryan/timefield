@@ -96,31 +96,37 @@
 		var OGminute	= $(".tc-minutes").clone().val();
 		var OGhour		= $(".tc-hours").clone().val();
 		var OGsecond	= $(".tc-seconds").clone().val();
-
-		// Function to check valid values
-		function checkFields(expectedValue,OGValue){
-			var value = $(this).val();
+		
+		var checkFields = function(expected,og,element,value){
 			if ( 
-				value > expectedValue
+				value > expected
 			) {
-				$(this).effect( "highlight", { 
+				$(element).effect( "highlight", { 
 					color: "rgba(255,180,180)", 
 					complete: function(){
-						$(this).select();
+						$(element).select();
 					}
 				}, 500 );
 				$(".tc-container").effect( "shake", {distance: 3, times: 2}, 250 );
-				$(this).val(OGValue);
+				$(element).val(og);
 			} 
 			else {
-				OGValue = $(this).val();
+				og = value;
 			}
 		}
 		
-		// This checks to see if the seconds, minutes, and hours are in the right range, if not it discards it for the last valid value entered, if so it saves the value for the next time an invalid value is entered
-		$(".tc-seconds").on("keyup",checkFields(60,OGsecond));
-		$(".tc-minutes").on("keyup",checkFields(60,OGminute));
-		$(".tc-hours").on("keyup",checkFields(12,OGhour));
+		// This checks to see if the seconds, hours, and minutes are between their ranges, if not it discards it for the last valid value entered, if so it saves the value for the next time an invalid value is entered
+		$(".tc-seconds").keyup(function(){
+			checkFields(60,OGsecond,$(this),$(this).val());
+		});
+		
+		$(".tc-minutes").keyup(function(){
+			checkFields(60,OGminute,$(this),$(this).val());
+		});
+		
+		$(".tc-hours").keyup(function(){
+			checkFields(12,OGhour,$(this),$(this).val());
+		});		
 		
 		// This adds leading zeroes to the hours and minutes when the user types a single digit
 		$(".tc-numbers").on("blur",function(){
